@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <style>
+        body {
+            background-color: #013220;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            font-size: 2em;
+            color: #FFD700;
+        }
+
+        .card {
+            width: 10vw;
+            height: 20vh;
+            object-fit: contain;
+            margin: 0.2vw;
+        }
+
+        .card-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            /* This will ensure the cards wrap onto multiple lines if there isn't enough space */
+            margin: 50px 0;
+        }
+
+        .deal-btn {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .deal-btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Poker Card Dealer Simulator</h1>
+    <div class="card-container" id="cardContainer">
+    </div>
+    <button class="deal-btn"><span id="buttontext">Deal Cards</span></button>
+</body>
+
+<script>
+    $(document).ready(function () {
+        var clicks = 0;
+        $(document).on('click', '.deal-btn', function () {
+            if (clicks == 0) {
+                while (cardContainer.firstChild) {
+                    cardContainer.firstChild.remove();
+                }
+                $.ajax({
+                    url: '/pokergameplay/dealcards',
+                    type: 'GET',
+                    success: function (res) {
+                        console.log(res);
+                    }
+                });
+                $("#buttontext").text("Flop");
+                clicks = 1
+            } else if (clicks == 1) {
+                $.ajax({
+                    url: '/pokergameplay/flop',
+                    type: 'GET',
+                    success: function (res) {
+                        for(var i = 0; i < res.length; i++){
+                            let cardImage = document.createElement('img');
+                            cardImage.src = `../cards/${res[i]}.png`;
+                            cardImage.classList.add('card');
+                            cardContainer.appendChild(cardImage);
+                        }
+                    }
+                });
+                $("#buttontext").text("Turn");
+                clicks = 2
+            } else if (clicks == 2) {
+                $.ajax({
+                    url: '/pokergameplay/turn',
+                    type: 'GET',
+                    success: function (res) {
+                        let cardImage = document.createElement('img');
+                        cardImage.src = `../cards/${res[0]}.png`;
+                        cardImage.classList.add('card');
+                        cardContainer.appendChild(cardImage);
+                    }
+                });
+                $("#buttontext").text("River");
+                clicks = 3
+            } else if (clicks == 3) {
+                $.ajax({
+                    url: '/pokergameplay/river',
+                    type: 'GET',
+                    success: function (res) {
+                        let cardImage = document.createElement('img');
+                        cardImage.src = `../cards/${res[0]}.png`;
+                        cardImage.classList.add('card');
+                        cardContainer.appendChild(cardImage);
+                    }
+                });
+                $("#buttontext").text("Deal Again");
+                clicks = 0
+            }
+        });
+    });
+</script>
+
+</html>

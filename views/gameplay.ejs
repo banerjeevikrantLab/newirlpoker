@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <style>
+        body {
+            background-color: #013220;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            font-size: 2em;
+            color: #FFD700;
+        }
+
+        .card {
+            width: 10vw;
+            height: 20vh;
+            object-fit: contain;
+            margin: 0.2vw;
+        }
+
+        .card-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            /* This will ensure the cards wrap onto multiple lines if there isn't enough space */
+            margin: 50px 0;
+        }
+
+        .deal-btn {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .deal-btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>In Game:</h1>
+    <div class="card-container" id="cardContainer">
+        <img src="../cards/gray_back.png" class="card" id="card1">
+        <img src="../cards/gray_back.png" class="card" id="card2">
+    </div>
+    <form method="post" action="/pokergameplay/leavegame">
+        <div class="mb-3">
+            <input type="submit" class="deal-btn" value="Leave Game" />
+        </div>
+    </form>
+
+    <script>
+        $(document).ready(function () {
+            function updateCardImages() {
+                $.get('/pokergameplay/get-current-cards', function (cards) {
+                    if (cards === undefined || cards.length == 0) {
+                        $('#card1').attr('src', '../cards/gray_back.png');
+                        $('#card2').attr('src', '../cards/gray_back.png');
+                    } else {
+                        $('#card1').attr('src', '../cards/' + cards[0] + '.png');
+                        $('#card2').attr('src', '../cards/' + cards[1] + '.png');
+                    }
+                }).fail(function () {
+                    console.log('Error fetching cards');
+                });
+            }
+
+            // Call updateCardImages immediately, and then every second
+            updateCardImages();
+            setInterval(updateCardImages, 2000);
+        });
+    </script>
+</body>
+
+</html>
