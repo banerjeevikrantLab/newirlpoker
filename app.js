@@ -47,4 +47,12 @@ app.use(function (err, req, res, next) {
     res.render('error');
 });
 
+// The added code to make the server listen on 0.0.0.0 and port 3000
+const PORT = 3000;
+const IP_ADDRESS = '0.0.0.0';
+
+app.listen(PORT, IP_ADDRESS, () => {
+    console.log(`Server started on http://${IP_ADDRESS}:${PORT}`);
+});
+
 module.exports = app;
