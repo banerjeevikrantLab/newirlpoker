@@ -35,7 +35,6 @@
             justify-content: center;
             align-items: center;
             flex-wrap: wrap;
-            /* This will ensure the cards wrap onto multiple lines if there isn't enough space */
             margin: 50px 0;
         }
 
@@ -49,6 +48,15 @@
 
         .deal-btn:hover {
             background-color: #45a049;
+        }
+
+        /* Responsive styles for mobile devices */
+        @media only screen and (max-width: 768px) {
+            .card {
+                width: 80vw;
+                height: auto;
+                margin: 1vw;
+            }
         }
     </style>
 </head>
@@ -81,9 +89,8 @@
                 });
             }
 
-            // Call updateCardImages immediately, and then every second
             updateCardImages();
-            setInterval(updateCardImages, 2000);
+            setInterval(updateCardImages, 1000);
         });
     </script>
 </body>

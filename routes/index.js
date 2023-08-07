@@ -47,6 +47,19 @@ router.get('/dashboard', function (req, res) {
     }
 });
 
+/**
+ * Handles GET requests to the '/gameplay' route.
+ * If the request's session contains both a user_game_id and a user_id, renders the 'gameplay' view, passing the session data to the view.
+ * Otherwise, redirects to the root ('/') route.
+ *
+ * @param {Object} req The Express request object representing the HTTP request.
+ * @param {Object} req.session The session data associated with the client.
+ * @param {number} req.session.user_game_id The ID of the game associated with the user, if any.
+ * @param {number} req.session.user_id The ID of the user associated with the session, if any.
+ *
+ * @param {Object} res The Express response object for sending back the HTTP response.
+ */
+
 router.get('/gameplay', function (req, res) {
     if (req.session.user_game_id && req.session.user_id) {
         res.render('gameplay', { session: req.session });     

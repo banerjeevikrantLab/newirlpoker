@@ -4,8 +4,7 @@ const connection = mysql.createConnection({
     host: 'localhost',
     database: 'pokerdb',
     user: 'root',
-    password: 'VB123yoyo1D!',
-    multipleStatements: true
+    password: 'VB123yoyo1D!'
 });
 
 connection.connect(function (error) {

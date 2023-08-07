@@ -3,10 +3,24 @@ var router = express.Router();
 
 var database = require('../database');
 
-router.post('/login', function (request, response, next) {
+/**
+ * Handles POST requests to the '/login' endpoint.
+ * Authenticates users based on the provided email and password.
+ * If authentication is successful, assigns user details to the session and redirects to the root.
+ * Otherwise, sends appropriate error messages.
+ * 
+ * @param {Object} req - The Express request object containing user details.
+ * @param {string} req.body.user_email_address - The email address of the user attempting to log in.
+ * @param {string} req.body.user_password - The password of the user attempting to log in.
+ * 
+ * @param {Object} res - The Express response object for sending back the HTTP response.
+ * @param {Function} next - The next middleware function in the Express router's stack.
+ */
 
-    var user_email_address = request.body.user_email_address;
-    var user_password = request.body.user_password;
+router.post('/login', function (req, res, next) {
+
+    var user_email_address = req.body.user_email_address;
+    var user_password = req.body.user_password;
 
     if (user_email_address && user_password) {
         query = `
@@ -20,45 +34,62 @@ router.post('/login', function (request, response, next) {
                 for (var count = 0; count < data.length; count++) {
                     if (data[count].user_password == user_password) {
 
-                        request.session.user_id = data[count].user_id;
+                        req.session.user_id = data[count].user_id;
                         if (data[count].user_game_id !== null) {
                             console.log(data);
-                            request.session.user_game_id = data[count].user_game_id;
+                            req.session.user_game_id = data[count].user_game_id;
                         }
-                        response.redirect("/");
+                        res.redirect("/");
                     } else {
-                        response.send('Incorrect Password');
+                        res.send('Incorrect Password');
                     }
                 }
             }
             else {
-                response.send(data);
+                res.send(data);
             }
-            response.end();
+            res.end();
         });
     }
     else {
-        response.send('Please Enter Email Address and Password Details');
-        response.end();
+        res.send('Please Enter Email Address and Password Details');
+        res.end();
     }
 
 });
 
-router.post('/signup', function (request, response, next) {
+/**
+ * Handles POST requests to the '/signup' endpoint.
+ * Registers a new user based on the provided email and password.
+ * Before registering, checks if the email address is already in use and validates the provided passwords.
+ * If registration is successful, assigns user ID to the session and redirects to the root.
+ * 
+ * @param {Object} req - The Express request object containing user details.
+ * @param {string} req.body.user_email_address - The email address of the user attempting to sign up.
+ * @param {string} req.body.user_password - The password of the user attempting to sign up.
+ * @param {string} req.body.user_repeat_password - The repeated password for verification.
+ * @param {Object} req.session - The session object associated with the client.
+ * @param {number} req.session.user_id - (Output) The ID of the newly registered user if signup is successful.
+ * 
+ * @param {Object} res - The Express response object for sending back the HTTP response.
+ * @param {Function} next - The next middleware function in the Express router's stack.
+ */
 
-    var user_email_address = request.body.user_email_address;
-    var user_password = request.body.user_password;
-    var user_repeat_password = request.body.user_repeat_password;
+router.post('/signup', function (req, res, next) {
+
+    var user_email_address = req.body.user_email_address;
+    var user_password = req.body.user_password;
+    var user_repeat_password = req.body.user_repeat_password;
 
     if (!user_email_address || !user_password || !user_repeat_password) {
-        response.send('Please Enter Email Address and Password Details');
-        response.end();
+        res.send('Please Enter Email Address and Password Details');
+        res.end();
         return;
     }
 
     if (user_password !== user_repeat_password) {
-        response.send('Passwords do not match');
-        response.end();
+        res.send('Passwords do not match');
+        res.end();
         return;
     }
 
@@ -74,36 +105,48 @@ router.post('/signup', function (request, response, next) {
     database.query(checkUserExistsQuery, [user_email_address], function (error, data) {
 
         if (error) {
-            response.send('Database error');
-            response.end();
+            res.send('Database error');
+            res.end();
             return;
         }
 
         if (data.length > 0) {
-            response.send('Email Already Exists');
-            response.end();
+            res.send('Email Already Exists');
+            res.end();
             return;
         }
 
         // Store password as plaintext
         database.query(insertUserQuery, [user_email_address, user_password], function (error, data) {
             if (error) {
-                response.send('Database error');
-                response.end();
+                res.send('Database error');
+                res.end();
                 return;
             }
 
             // If insertion was successful, get the user ID and set the session
-            request.session.user_id = data.insertId; // Assuming this is how you get the inserted user's ID
-            response.redirect("/");
-            response.end();
+            req.session.user_id = data.insertId; // Assuming this is how you get the inserted user's ID
+            res.redirect("/");
+            res.end();
         });
     });
 });
 
-router.get('/logout', function (request, response, next) {
-    delete request.session.user_id;
-    response.redirect("/");
+/**
+ * Handles GET requests to the '/logout' endpoint.
+ * Removes the user ID from the session and redirects to the root.
+ * 
+ * @param {Object} req - The Express request object.
+ * @param {Object} req.session - The session object associated with the client.
+ * @param {number} req.session.user_id - (Output) The ID of the user to be removed from the session.
+ * 
+ * @param {Object} res - The Express response object for sending back the HTTP response.
+ * @param {Function} next - The next middleware function in the Express router's stack.
+ */
+
+router.get('/logout', function (req, res, next) {
+    delete req.session.user_id;
+    res.redirect("/");
 });
 
 module.exports = router;
