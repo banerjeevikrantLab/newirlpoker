@@ -1,82 +1,128 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>In Game</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <style>
-        body {
-            background-color: #013220;
-            color: #fff;
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
+        * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
         }
 
-        h1 {
-            font-size: 2em;
-            color: #FFD700;
+        body {
+            position: relative;
+            min-height: 100vh;
+            width: 100%;
+            background: rgba(0, 149, 121, 0.5); /* semi-transparent background color */
+            overflow: hidden;
         }
 
-        .card {
-            width: 10vw;
-            height: 20vh;
-            object-fit: contain;
-            margin: 0.2vw;
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('../cards/wallpaper.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center center;
+            filter: blur(10px); /* adjust the value for more or less blur */
+            z-index: -1; /* place the image behind the content */
+
         }
 
-        .card-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: wrap;
-            margin: 50px 0;
+        .container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 430px;
+            width: 100%;
+            background: #fff;
+            border-radius: 7px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+            max-height: auto;
         }
 
-        .deal-btn {
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
+        .container .form {
+            padding: 2rem;
+        }
+
+        .form header {
+            font-size: 2rem;
+            font-weight: 500;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .form img {
+            width: 39%;
+            margin-bottom: 1.3rem;
+            display: inline-block; 
+            margin-left: 5%;  
+            margin-right: 5%; 
+        }
+
+        .form input.button {
+            color: #fff;
+            background: #009579;
+            font-size: 1.2rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            margin-top: 1.7rem;
+            cursor: pointer;
+            transition: 0.4s;
             border: none;
+            width: 100%;
+            height: 60px;
+            border-radius: 6px;
+        }
+
+        .form input.button:hover {
+            background: #006653;
+        }
+
+        .signup {
+            font-size: 17px;
+            text-align: center;
+        }
+
+        .signup label {
+            color: #009579;
             cursor: pointer;
         }
 
-        .deal-btn:hover {
-            background-color: #45a049;
-        }
-
-        /* Responsive styles for mobile devices */
-        @media only screen and (max-width: 768px) {
-            .card {
-                width: 80vw;
-                height: auto;
-                margin: 1vw;
-            }
+        .signup label:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 
 <body>
-    <h1>In Game:</h1>
-    <div class="card-container" id="cardContainer">
-        <img src="../cards/gray_back.png" class="card" id="card1">
-        <img src="../cards/gray_back.png" class="card" id="card2">
-    </div>
-    <form method="post" action="/pokergameplay/leavegame">
-        <div class="mb-3">
-            <input type="submit" class="deal-btn" value="Leave Game" />
+    <div class="container">
+        <div class="form">
+            <header>In Game:</header>
+            <img src="../cards/gray_back.png" id="card1">
+            <img src="../cards/gray_back.png" id="card2">
+            <form method="post" action="/pokergameplay/leavegame">
+                <input type="submit" class="button" value="Leave Game">
+            </form>
         </div>
-    </form>
+    </div>
 
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             function updateCardImages() {
-                $.get('/pokergameplay/get-current-cards', function (cards) {
+                $.get('/pokergameplay/get-current-cards', function(cards) {
                     if (cards === undefined || cards.length == 0) {
                         $('#card1').attr('src', '../cards/gray_back.png');
                         $('#card2').attr('src', '../cards/gray_back.png');
@@ -84,7 +130,7 @@
                         $('#card1').attr('src', '../cards/' + cards[0] + '.png');
                         $('#card2').attr('src', '../cards/' + cards[1] + '.png');
                     }
-                }).fail(function () {
+                }).fail(function() {
                     console.log('Error fetching cards');
                 });
             }

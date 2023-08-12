@@ -34,7 +34,7 @@ function handleError(error) {
  * @param {Function} next - Callback argument to the middleware function, optionally called to move execution to the next middleware.
  */
 
-router.get('/game', (req, res, next) => {
+router.post('/game', (req, res, next) => {
     const insertGame = `
         INSERT INTO games 
         (board, player1, player2, player3, player4, player5, player6, player7, player8, 
@@ -56,7 +56,7 @@ router.get('/game', (req, res, next) => {
             if (handleError(error)) return;
 
             delete req.session.user_id;
-            res.render('dashboard', { session: req.session });
+            res.redirect('/dashboard');
         });
     });
 });

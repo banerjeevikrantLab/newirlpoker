@@ -4,61 +4,92 @@
 <head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <style>
-        body {
-            background-color: #013220;
-            color: #fff;
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+        *{
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        body {
+            position: relative;
+            min-height: 100vh;
+            width: 100%;
+            background: rgba(0, 149, 121, 0.5); /* semi-transparent background color */
+            overflow: hidden;
         }
 
-        h1 {
-            font-size: 2em;
-            color: #FFD700;
-        }
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('../cards/wallpaper.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center center;
+            filter: blur(10px); /* adjust the value for more or less blur */
+            z-index: -1; /* place the image behind the content */
 
-        .card {
-            width: 10vw;
-            height: 20vh;
-            object-fit: contain;
-            margin: 0.2vw;
         }
-
-        .card-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: wrap;
-            /* This will ensure the cards wrap onto multiple lines if there isn't enough space */
-            margin: 50px 0;
+        
+        .container{
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            max-width: 1000px;
+            width: 100%;
+            background: #fff;
+            border-radius: 7px;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+            text-align: center;
+            padding: 2rem;
         }
-
-        .deal-btn {
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
+        .logged-in-label{
+            font-size: 2rem;
+            font-weight: 500;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #009579;
+        }
+        .deal-btn{
+            color: #fff;
+            background: #009579;
+            font-size: 1.2rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            margin-top: 1.7rem;
             cursor: pointer;
+            transition: 0.4s;
+            border: none;
+            padding: 10px 20px;
         }
-
-        .deal-btn:hover {
-            background-color: #45a049;
+        .deal-btn:hover{
+            background: #006653;
+        }
+        .card {
+            width: 39%;
+            max-width: 150px;
+            margin-bottom: 1.3rem;
+            display: inline-block; 
+            margin-left: 1%;  
+            margin-right: 1%; 
         }
     </style>
 </head>
 
 <body>
-    <h1>Poker Card Dealer Simulator</h1>
-    <div class="card-container" id="cardContainer">
+    <div class="container">
+        <h1 class="logged-in-label">Poker Table #: <%= session.user_game_id %></h1>
+        <div class="logged-in-container card-container" id="cardContainer"></div>
+        <button class="request deal-btn"><span id="buttontext">Deal Cards</span></button>
     </div>
-    <button class="deal-btn"><span id="buttontext">Deal Cards</span></button>
 </body>
+
+</html>
 
 <script>
     $(document).ready(function () {
