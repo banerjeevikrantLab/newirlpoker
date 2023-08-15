@@ -13,7 +13,7 @@
         <% if(session.user_id) { %>
             <div class="logged-in-container">
                 <h1 class="logged-in-label">Welcome, Player</h1>
-                <a href="/users/logout" class="request">Logout</a>
+                <a href="/users/logout" class="request">Log out</a>
                 <form method="post" action="/pokergameplay/game">
                     <input type="submit" class="request" value="Start Game" />
                 </form>
@@ -31,30 +31,30 @@
         <% } else { %>
             <input type="checkbox" id="check">
             <div class="login form">
-                <header>Login</header>
+                <header>Log In</header>
                 <form method="post" action="/users/login">
                     <input type="email" name="user_email_address" placeholder="Enter your email">
                     <input type="password" name="user_password" placeholder="Enter your password">
                     <a href="#">Forgot password?</a>
-                    <input type="submit" class="button" value="Login">
+                    <input type="submit" class="button" value="Log In">
                 </form>
                 <div class="signup">
                     <span class="signup">Don't have an account?
-                        <label for="check">Signup</label>
+                        <label for="check">Sign up</label>
                     </span>
                 </div>
             </div>
             <div class="registration form">
-                <header>Signup</header>
+                <header>Sign Up</header>
                 <form method="post" action="/users/signup">
                     <input type="email" name="user_email_address" placeholder="Enter your email">
                     <input type="password" name="user_password" placeholder="Create a password">
                     <input type="password" name="user_repeat_password" placeholder="Confirm your password">
-                    <input type="submit" class="button" value="Signup">
+                    <input type="submit" class="button" value="Sign Up">
                 </form>
                 <div class="signup">
                     <span class="signup">Already have an account?
-                        <label for="check">Login</label>
+                        <label for="check">Log In</label>
                     </span>
                 </div>
             </div>
